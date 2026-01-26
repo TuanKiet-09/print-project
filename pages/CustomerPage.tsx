@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import DesignCanvas from '../components/DesignCanvas';
 import Toolbar from '../components/Toolbar';
-import { MOCK_PRODUCTS } from '../constants';
+import { MOCK_PRODUCTS, CANVAS_SIZE } from '../constants';
 import { DesignState, DesignLayer, BaseProduct, ProductVariant } from '../types';
-import { ShoppingCart, Share2, Save, Download } from 'lucide-react';
+import { ShoppingCart, Save } from 'lucide-react';
 
 const CustomerPage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<BaseProduct>(MOCK_PRODUCTS[0]);
@@ -20,7 +20,8 @@ const CustomerPage: React.FC = () => {
   const [isDrawingMode, setDrawingMode] = useState(false);
   const [drawingSettings, setDrawingSettings] = useState({ color: '#000000', width: 3 });
   
-  const stageRef = useRef<any>(null);
+  const frontStageRef = useRef<any>(null);
+  const backStageRef = useRef<any>(null);
 
   const currentLayers = designState.layers[designState.side];
 
@@ -30,6 +31,17 @@ const CustomerPage: React.FC = () => {
         layers: {
             ...prev.layers,
             [prev.side]: newLayers
+        }
+    }));
+  };
+
+  // Helper for specific side updates from the dual canvas setup
+  const updateSideLayers = (side: 'front' | 'back', newLayers: DesignLayer[]) => {
+    setDesignState(prev => ({
+        ...prev,
+        layers: {
+            ...prev.layers,
+            [side]: newLayers
         }
     }));
   };
@@ -62,10 +74,74 @@ const CustomerPage: React.FC = () => {
     updateLayers(newLayers);
   };
 
-  const handleSave = () => {
-      // Simulate saving to backend
-      console.log('Saving Design:', designState);
-      alert('Design saved! (Check console for object)');
+  const handleSwitchSide = () => {
+    setSelectedLayerId(null); // Clear selection when switching
+    setDesignState(prev => ({...prev, side: prev.side === 'front' ? 'back' : 'front'}));
+  };
+
+  const handleSave = async () => {
+      // 1. Clear selection to remove transformer handles from the screenshot
+      setSelectedLayerId(null);
+
+      // 2. Wait a brief moment for the re-render to remove the transformer
+      setTimeout(async () => {
+          if (frontStageRef.current && backStageRef.current) {
+              try {
+                  // Capture both stages
+                  const frontData = frontStageRef.current.toDataURL({ pixelRatio: 2 });
+                  const backData = backStageRef.current.toDataURL({ pixelRatio: 2 });
+
+                  // Create a canvas to merge them
+                  const canvas = document.createElement('canvas');
+                  const gap = 40;
+                  const labelHeight = 50;
+                  canvas.width = (CANVAS_SIZE * 2) + gap;
+                  canvas.height = CANVAS_SIZE + labelHeight;
+                  
+                  const ctx = canvas.getContext('2d');
+                  if (!ctx) return;
+
+                  // White background
+                  ctx.fillStyle = '#ffffff';
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                  // Helper to load image
+                  const loadImage = (src: string) => new Promise<HTMLImageElement>((resolve) => {
+                      const img = new Image();
+                      img.onload = () => resolve(img);
+                      img.src = src;
+                  });
+
+                  // Load captured images
+                  const [imgFront, imgBack] = await Promise.all([loadImage(frontData), loadImage(backData)]);
+
+                  // Draw text labels
+                  ctx.font = "bold 24px Oswald, sans-serif";
+                  ctx.fillStyle = "#1e3a8a"; // Brand blue
+                  ctx.textAlign = "center";
+                  ctx.textBaseline = "middle";
+                  
+                  ctx.fillText("FRONT VIEW", CANVAS_SIZE / 2, labelHeight / 2);
+                  ctx.fillText("BACK VIEW", CANVAS_SIZE + gap + (CANVAS_SIZE / 2), labelHeight / 2);
+
+                  // Draw Images
+                  ctx.drawImage(imgFront, 0, labelHeight, CANVAS_SIZE, CANVAS_SIZE);
+                  ctx.drawImage(imgBack, CANVAS_SIZE + gap, labelHeight, CANVAS_SIZE, CANVAS_SIZE);
+
+                  // Download
+                  const link = document.createElement('a');
+                  link.download = `Printtique-Design-${selectedProduct.name.replace(/\s+/g, '-')}-${Date.now()}.png`;
+                  link.href = canvas.toDataURL('image/png');
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+
+              } catch (e) {
+                  console.error("Export failed", e);
+                  alert("Failed to generate preview.");
+              }
+          }
+      }, 100);
   };
 
   return (
@@ -90,11 +166,11 @@ const CustomerPage: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-3">
-             <button onClick={() => setDesignState(prev => ({...prev, side: prev.side === 'front' ? 'back' : 'front'}))} className="text-sm font-medium text-gray-600 hover:text-blue-600 px-3 py-1 border rounded">
+             <button onClick={handleSwitchSide} className="text-sm font-medium text-gray-600 hover:text-blue-600 px-3 py-1 border rounded">
                 Side: {designState.side.toUpperCase()}
              </button>
              <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
-                <Save size={18} /> Save
+                <Save size={18} /> Save Preview
              </button>
              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
                 <ShoppingCart size={18} /> Add to Cart - {(selectedVariant.price).toLocaleString()}đ
@@ -121,21 +197,58 @@ const CustomerPage: React.FC = () => {
 
         {/* Center: Canvas Area */}
         <div className="flex-1 bg-gray-100 overflow-auto flex items-center justify-center p-8 relative">
-            <DesignCanvas 
-                product={selectedProduct}
-                variant={selectedVariant}
-                side={designState.side} // Passed side prop
-                layers={currentLayers}
-                selectedId={selectedLayerId}
-                onSelect={setSelectedLayerId}
-                onChange={updateLayers}
-                isDrawingMode={isDrawingMode}
-                drawingSettings={drawingSettings}
-                stageRef={stageRef}
-            />
+            
+            {/* 
+               Render BOTH canvases but hide the inactive one off-screen.
+               This ensures both are available in the DOM for image capture via .toDataURL().
+            */}
+            <div className="relative w-full h-full flex items-center justify-center">
+                
+                {/* FRONT CANVAS */}
+                <div style={{
+                    position: designState.side === 'front' ? 'relative' : 'absolute',
+                    left: designState.side === 'front' ? 'auto' : '-9999px',
+                    visibility: designState.side === 'front' ? 'visible' : 'hidden',
+                    zIndex: designState.side === 'front' ? 10 : 0
+                }}>
+                    <DesignCanvas 
+                        product={selectedProduct}
+                        variant={selectedVariant}
+                        side="front"
+                        layers={designState.layers.front}
+                        selectedId={designState.side === 'front' ? selectedLayerId : null}
+                        onSelect={setSelectedLayerId}
+                        onChange={(layers) => updateSideLayers('front', layers)}
+                        isDrawingMode={designState.side === 'front' && isDrawingMode}
+                        drawingSettings={drawingSettings}
+                        stageRef={frontStageRef}
+                    />
+                </div>
+
+                {/* BACK CANVAS */}
+                <div style={{
+                     position: designState.side === 'back' ? 'relative' : 'absolute',
+                     left: designState.side === 'back' ? 'auto' : '-9999px',
+                     visibility: designState.side === 'back' ? 'visible' : 'hidden',
+                     zIndex: designState.side === 'back' ? 10 : 0
+                }}>
+                    <DesignCanvas 
+                        product={selectedProduct}
+                        variant={selectedVariant}
+                        side="back"
+                        layers={designState.layers.back}
+                        selectedId={designState.side === 'back' ? selectedLayerId : null}
+                        onSelect={setSelectedLayerId}
+                        onChange={(layers) => updateSideLayers('back', layers)}
+                        isDrawingMode={designState.side === 'back' && isDrawingMode}
+                        drawingSettings={drawingSettings}
+                        stageRef={backStageRef}
+                    />
+                </div>
+            </div>
             
             {/* Size Chart Popup Trigger (Visual only for demo) */}
-            <button className="absolute bottom-4 left-4 bg-white px-3 py-1 rounded shadow text-xs text-gray-500 underline">
+            <button className="absolute bottom-4 left-4 bg-white px-3 py-1 rounded shadow text-xs text-gray-500 underline z-20">
                 View Size Chart
             </button>
         </div>

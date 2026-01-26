@@ -153,7 +153,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden flex justify-center items-center p-4">
+    <div className="bg-gray-200 shadow-lg rounded-lg overflow-hidden flex justify-center items-center p-4">
       <Stage
         width={CANVAS_SIZE}
         height={CANVAS_SIZE}
@@ -164,30 +164,33 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
         onTouchMove={handleMouseMove}
         onTouchEnd={handleMouseUp}
         ref={stageRef}
-        className="border border-gray-200" // Removed bg-gray-100 for a cleaner look
+        style={{ backgroundImage: 'linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%)', backgroundSize: '20px 20px', backgroundColor: 'white' }}
+        className="border border-gray-300"// Removed bg-gray-100 for a cleaner look
       >
         <Layer>
           {/* Product Background Group */}
           {bgImage && (
             <Group>
-               {/* Base Image */}
-               <KonvaImage
-                 image={bgImage}
-                 width={CANVAS_SIZE}
-                 height={CANVAS_SIZE}
-                 listening={false}
-               />
-               
-               {/* Tint Overlay 
-                   'multiply' blend mode tints white parts of the image while keeping transparency transparent 
-               */}
-               <Rect 
-                 width={CANVAS_SIZE}
-                 height={CANVAS_SIZE}
-                 fill={variant.colorHex}
-                 globalCompositeOperation="multiply"
-                 listening={false}
-               />
+              {/* 1. Vẽ ảnh gốc bình thường */}
+              <KonvaImage
+                image={bgImage}
+                width={CANVAS_SIZE}
+                height={CANVAS_SIZE}
+                listening={false}
+              />
+
+              {/* 2. Chỉ vẽ lớp màu nếu KHÔNG phải màu trắng */}
+              {variant.colorHex.toLowerCase() !== '#ffffff' && (
+                <Rect
+                  width={CANVAS_SIZE}
+                  height={CANVAS_SIZE}
+                  fill={variant.colorHex}
+                  // source-atop: Chỉ vẽ đè lên những điểm ảnh CÓ SẴN (tức là chỉ vẽ lên cái áo, ko vẽ ra nền)
+                  globalCompositeOperation="source-atop" 
+                  opacity={0.7} // Giảm opacity một chút để vẫn nhìn thấy nếp nhăn áo (thử chỉnh từ 0.3 -> 0.7)
+                  listening={false}
+                />
+              )}
             </Group>
           )}
           

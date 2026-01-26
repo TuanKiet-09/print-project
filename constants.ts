@@ -39,22 +39,22 @@ export const MOCK_PRODUCTS: BaseProduct[] = [
     printArea: { width: 200, height: 300, top: 150, left: 200 }, // Adjusted for the specific image layout
     variants: TSHIRT_VARIANTS
   },
-  {
-    id: 'p2',
-    name: 'Premium Hoodie',
-    type: 'hoodie',
-    printArea: { width: 280, height: 350, top: 120, left: 160 },
-    variants: [
-      {
-        id: 'v2_grey',
-        name: 'Heather Grey',
-        colorHex: '#9ca3af',
-        imageFront: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
-        imageBack: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
-        price: 350000,
-      }
-    ]
-  }
+  // {
+  //   id: 'p2',
+  //   name: 'Premium Hoodie',
+  //   type: 'hoodie',
+  //   printArea: { width: 280, height: 350, top: 120, left: 160 },
+  //   variants: [
+  //     {
+  //       id: 'v2_grey',
+  //       name: 'Heather Grey',
+  //       colorHex: '#9ca3af',
+  //       imageFront: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
+  //       imageBack: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80',
+  //       price: 350000,
+  //     }
+  //   ]
+  // }
 ];
 
 export const CLIPARTS = [
