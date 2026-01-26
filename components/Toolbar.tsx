@@ -124,7 +124,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 type="text" 
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="flex-1 border border-white rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 border border-gray-200 rounded px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button onClick={handleAddText} className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"><Plus size={20} /></button>
             </div>
@@ -135,7 +135,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 <div>
                     <label className="text-xs text-gray-500">Font Family</label>
                     <select 
-                        className="w-full border p-2 rounded text-sm text-white"
+                        className="w-full border p-2 rounded text-sm text-black"
                         value={(selectedLayer as TextLayer).fontFamily}
                         onChange={(e) => onUpdateLayer(selectedLayer.id, { fontFamily: e.target.value })}
                     >
