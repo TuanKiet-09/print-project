@@ -13,8 +13,10 @@ export const AVAILABLE_FONTS = [
 // Placeholder URLs for the White T-Shirt Base Images (Transparent PNGs)
 // NOTE: Replace these with the actual URLs of the images provided if they are hosted, 
 // or base64 strings. Using high-quality transparent mockups here for demonstration.
-const SHIRT_FRONT_URL = "https://i.postimg.cc/sgXMdLWK/front-white-t-shirts.png";
-const SHIRT_BACK_URL = "https://i.postimg.cc/K8z1SWTf/back-white-t-shirts.png"; // Assuming similar back view or reuse
+const SHIRT_FRONT_URL = "https://i.postimg.cc/7htw3RnD/frontviewhoodie.png";
+const SHIRT_BACK_URL = "https://i.postimg.cc/90gCdkY2/backviewhoodie.png";
+const MASK_FRONT_URL = "https://i.postimg.cc/8cXNRYmN/fronthoodie.png";
+const MASK_BACK_URL = "https://i.postimg.cc/4y2s60QT/backhoodie.png";  // Assuming similar back view or reuse
 
 const TSHIRT_VARIANTS = [
   { id: 'v1_white', name: 'White', colorHex: '#ffffff' },
@@ -28,15 +30,17 @@ const TSHIRT_VARIANTS = [
   ...v,
   imageFront: SHIRT_FRONT_URL,
   imageBack: SHIRT_BACK_URL,
+  maskFront: MASK_FRONT_URL,
+  maskBack: MASK_BACK_URL,
   price: 150000
 }));
 
 export const MOCK_PRODUCTS: BaseProduct[] = [
   {
     id: 'p1',
-    name: 'Classic Cotton T-Shirt',
+    name: 'Classic Cotton Hoodie',
     type: 't-shirt',
-    printArea: { width: 250, height: 325, top: 150, left: 175 }, // Adjusted for the specific image layout
+    printArea: { width: 300, height: 500, top: 200, left: 250 }, // Adjusted for the specific image layout
     variants: TSHIRT_VARIANTS
   },
   // {

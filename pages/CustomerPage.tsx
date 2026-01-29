@@ -96,8 +96,8 @@ const CustomerPage: React.FC = () => {
                   const canvas = document.createElement('canvas');
                   const gap = 40;
                   const labelHeight = 50;
-                  canvas.width = (CANVAS_SIZE * 2) + gap;
-                  canvas.height = CANVAS_SIZE + labelHeight;
+                  canvas.width = (800 * 2) + gap;
+                  canvas.height = 1000 + labelHeight;
                   
                   const ctx = canvas.getContext('2d');
                   if (!ctx) return;
@@ -122,12 +122,12 @@ const CustomerPage: React.FC = () => {
                   ctx.textAlign = "center";
                   ctx.textBaseline = "middle";
                   
-                  ctx.fillText("FRONT VIEW", CANVAS_SIZE / 2, labelHeight / 2);
-                  ctx.fillText("BACK VIEW", CANVAS_SIZE + gap + (CANVAS_SIZE / 2), labelHeight / 2);
+                  ctx.fillText("FRONT VIEW", 800 / 2, labelHeight / 2);
+                  ctx.fillText("BACK VIEW", 800 + gap + (800 / 2), labelHeight / 2);
 
                   // Draw Images
-                  ctx.drawImage(imgFront, 0, labelHeight, CANVAS_SIZE, CANVAS_SIZE);
-                  ctx.drawImage(imgBack, CANVAS_SIZE + gap, labelHeight, CANVAS_SIZE, CANVAS_SIZE);
+                  ctx.drawImage(imgFront, 0, labelHeight, 800, 1000);
+                  ctx.drawImage(imgBack, 800 + gap, labelHeight, 800, 1000);
 
                   // Download
                   const link = document.createElement('a');
@@ -167,7 +167,13 @@ const CustomerPage: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-3">
-             <button onClick={handleSwitchSide} className="text-sm font-medium text-gray-600 hover:text-blue-600 px-3 py-1 border rounded">
+             <button 
+                onClick={() => setShowSizeChart(true)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm"
+                 >
+                View Size Chart
+             </button>
+             <button onClick={handleSwitchSide} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
                 Side: {designState.side.toUpperCase()}
              </button>
              <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
@@ -244,14 +250,6 @@ const CustomerPage: React.FC = () => {
                     />
                 </div>
             </div>
-            
-            {/* Size Chart Popup Trigger */}
-            <button 
-                onClick={() => setShowSizeChart(true)}
-                className="absolute bottom-4 left-4 bg-white px-3 py-1 rounded shadow text-xs text-gray-500 underline z-20 hover:text-blue-600 transition-colors"
-            >
-                View Size Chart
-            </button>
         </div>
 
         {/* Right: Tools */}

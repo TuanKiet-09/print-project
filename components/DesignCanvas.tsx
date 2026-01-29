@@ -87,6 +87,8 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
   // Select the correct image URL based on the current side
   const imageUrl = side === 'front' ? variant.imageFront : variant.imageBack;
   const [bgImage] = useImage(imageUrl);
+  const maskUrl = side === 'front' ? variant.maskFront : variant.maskBack;
+  const [maskImage] = useImage(maskUrl);
   
   const transformerRef = useRef<any>(null);
   
@@ -153,10 +155,10 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
   };
 
   return (
-    <div className="bg-gray-200 shadow-lg rounded-lg overflow-hidden flex justify-center items-center p-4">
+    <div className="bg-gray-200 shadow-lg rounded-lg overflow-hidden flex justify-center items-center p-4 scale-[0.6] origin-center">
       <Stage
-        width={CANVAS_SIZE}
-        height={CANVAS_SIZE}
+        width={800}
+        height={1000}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -168,31 +170,46 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
         className="border border-gray-300"// Removed bg-gray-100 for a cleaner look
       >
         <Layer>
-          {/* Product Background Group */}
-          {bgImage && (
-            <Group>
-              {/* 1. Vẽ ảnh gốc bình thường */}
-              <KonvaImage
-                image={bgImage}
-                width={CANVAS_SIZE}
-                height={CANVAS_SIZE}
-                listening={false}
-              />
+        {bgImage && (
+          <KonvaImage
+            image={bgImage}
+            width={800}
+            height={1000}
+            listening={false}
+          />
+        )}
+      </Layer>
 
-              {/* 2. Chỉ vẽ lớp màu nếu KHÔNG phải màu trắng */}
-              {variant.colorHex.toLowerCase() !== '#ffffff' && (
-                <Rect
-                  width={CANVAS_SIZE}
-                  height={CANVAS_SIZE}
-                  fill={variant.colorHex}
-                  // source-atop: Chỉ vẽ đè lên những điểm ảnh CÓ SẴN (tức là chỉ vẽ lên cái áo, ko vẽ ra nền)
-                  globalCompositeOperation="source-atop" 
-                  opacity={0.7} // Giảm opacity một chút để vẫn nhìn thấy nếp nhăn áo (thử chỉnh từ 0.3 -> 0.7)
-                  listening={false}
-                />
-              )}
-            </Group>
-          )}
+      {/* --- LAYER 2: LỚP MÀU (Xử lý riêng biệt) --- */}
+      {/* Layer này nằm đè lên Layer 1. Những chỗ trong suốt sẽ nhìn xuyên qua thấy Layer 1 */}
+      <Layer>
+        {variant.colorHex.toLowerCase() !== '#ffffff' && maskImage && (
+          <Group>
+            {/* Bước A: Vẽ cái khuôn (Mask) trước */}
+            <KonvaImage
+              image={maskImage}
+              width={800}
+              height={1000}
+              listening={false}
+            />
+
+            {/* Bước B: Đổ màu vào khuôn */}
+            <Rect
+              width={800}
+              height={1000}
+              fill={variant.colorHex}
+              // source-in: Chỉ giữ lại màu ở những chỗ đè lên Mask (trong Layer này)
+              // Vì Layer này tách biệt, nó không xóa ảnh nền ở Layer 1
+              globalCompositeOperation="source-in"
+              
+              // Chỉnh độ trong suốt để màu hòa trộn với nếp nhăn áo ở Layer 1
+              opacity={0.6} // Thử chỉnh từ 0.5 đến 0.8 để thấy độ thật
+              listening={false}
+            />
+          </Group>
+        )}
+      </Layer>
+      <Layer>
           
           {/* Print Area Guide */}
           <Rect 

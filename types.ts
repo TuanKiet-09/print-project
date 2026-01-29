@@ -6,6 +6,8 @@ export interface ProductVariant {
   colorHex: string;
   imageFront: string;
   imageBack: string;
+  maskFront: string;
+  maskBack: string;
   price: number;
 }
 
