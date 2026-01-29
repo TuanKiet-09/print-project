@@ -3,7 +3,7 @@ import DesignCanvas from '../components/DesignCanvas';
 import Toolbar from '../components/Toolbar';
 import { MOCK_PRODUCTS, CANVAS_SIZE } from '../constants';
 import { DesignState, DesignLayer, BaseProduct, ProductVariant } from '../types';
-import { ShoppingCart, Save } from 'lucide-react';
+import { ShoppingCart, Save, X } from 'lucide-react';
 
 const CustomerPage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<BaseProduct>(MOCK_PRODUCTS[0]);
@@ -19,6 +19,7 @@ const CustomerPage: React.FC = () => {
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [isDrawingMode, setDrawingMode] = useState(false);
   const [drawingSettings, setDrawingSettings] = useState({ color: '#000000', width: 3 });
+  const [showSizeChart, setShowSizeChart] = useState(false);
   
   const frontStageRef = useRef<any>(null);
   const backStageRef = useRef<any>(null);
@@ -169,11 +170,8 @@ const CustomerPage: React.FC = () => {
              <button onClick={handleSwitchSide} className="text-sm font-medium text-gray-600 hover:text-blue-600 px-3 py-1 border rounded">
                 Side: {designState.side.toUpperCase()}
              </button>
-             <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+             <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
                 <Save size={18} /> Save Preview
-             </button>
-             <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
-                <ShoppingCart size={18} /> Add to Cart - {(selectedVariant.price).toLocaleString()}đ
              </button>
         </div>
       </header>
@@ -247,8 +245,11 @@ const CustomerPage: React.FC = () => {
                 </div>
             </div>
             
-            {/* Size Chart Popup Trigger (Visual only for demo) */}
-            <button className="absolute bottom-4 left-4 bg-white px-3 py-1 rounded shadow text-xs text-gray-500 underline z-20">
+            {/* Size Chart Popup Trigger */}
+            <button 
+                onClick={() => setShowSizeChart(true)}
+                className="absolute bottom-4 left-4 bg-white px-3 py-1 rounded shadow text-xs text-gray-500 underline z-20 hover:text-blue-600 transition-colors"
+            >
                 View Size Chart
             </button>
         </div>
@@ -267,6 +268,36 @@ const CustomerPage: React.FC = () => {
             setDrawingSettings={setDrawingSettings}
         />
       </div>
+
+      {/* Size Chart Modal */}
+      {showSizeChart && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="absolute inset-0" onClick={() => setShowSizeChart(false)}></div>
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden relative z-10 animate-in zoom-in-95 duration-200">
+                <button 
+                    onClick={() => setShowSizeChart(false)}
+                    className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-600 transition-colors"
+                >
+                    <X size={20} />
+                </button>
+                <div className="p-8">
+                    <h3 className="text-2xl font-bold font-oswald text-slate-800 mb-2">Size Guide</h3>
+                    <p className="text-gray-500 mb-6">Find your perfect fit for the {selectedProduct.name}</p>
+                    
+                    <div className="grid grid-cols-1 gap-8">
+                        {/* Image Illustration */}
+                        <div className="bg-gray-50 rounded-lg p-4 flex items-center justify-center border border-gray-100">
+                            <img 
+                                src="https://i.postimg.cc/3wccVgWD/size.png" 
+                                alt="Measurement Guide" 
+                                className="w-full opacity-80"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 };
