@@ -36,7 +36,7 @@ export const MOCK_PRODUCTS: BaseProduct[] = [
     id: 'p1',
     name: 'Classic Cotton T-Shirt',
     type: 't-shirt',
-    printArea: { width: 200, height: 300, top: 150, left: 200 }, // Adjusted for the specific image layout
+    printArea: { width: 250, height: 325, top: 150, left: 175 }, // Adjusted for the specific image layout
     variants: TSHIRT_VARIANTS
   },
   // {
