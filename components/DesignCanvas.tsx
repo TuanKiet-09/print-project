@@ -203,7 +203,7 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
               globalCompositeOperation="source-in"
               
               // Chỉnh độ trong suốt để màu hòa trộn với nếp nhăn áo ở Layer 1
-              opacity={0.6} // Thử chỉnh từ 0.5 đến 0.8 để thấy độ thật
+              opacity={0.75} // Thử chỉnh từ 0.5 đến 0.8 để thấy độ thật
               listening={false}
             />
           </Group>

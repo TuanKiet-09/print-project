@@ -20,12 +20,12 @@ const MASK_BACK_URL = "https://i.postimg.cc/4y2s60QT/backhoodie.png";  // Assumi
 
 const TSHIRT_VARIANTS = [
   { id: 'v1_white', name: 'White', colorHex: '#ffffff' },
-  { id: 'v1_red', name: 'Red', colorHex: '#ef4444' },
+  // { id: 'v1_red', name: 'Red', colorHex: '#ef4444' },
   { id: 'v1_black', name: 'Black', colorHex: '#171717' }, // Dark grey to preserve some texture
-  { id: 'v1_orange', name: 'Orange', colorHex: '#f97316' },
-  { id: 'v1_yellow', name: 'Yellow', colorHex: '#eab308' },
-  { id: 'v1_blue', name: 'Blue', colorHex: '#3b82f6' },
-  { id: 'v1_grey', name: 'Grey', colorHex: '#6b7280' },
+  // { id: 'v1_orange', name: 'Orange', colorHex: '#f97316' },
+  // { id: 'v1_yellow', name: 'Yellow', colorHex: '#eab308' },
+  // { id: 'v1_blue', name: 'Blue', colorHex: '#3b82f6' },
+  // { id: 'v1_grey', name: 'Grey', colorHex: '#6b7280' },
 ].map(v => ({
   ...v,
   imageFront: SHIRT_FRONT_URL,
