@@ -190,7 +190,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                     <h3 className="font-semibold text-gray-800 mb-2">Clipart Library</h3>
                     
                     {/* Category Selector */}
-                    <div className="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar">
+                    <div className="flex gap-2 overflow-x-auto pb-2 mb-3 scrollbar">
                         {categories.map(cat => (
                             <button
                                 key={cat}
