@@ -30,6 +30,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'text' | 'image' | 'draw' | 'layers'>('text');
   const [inputText, setInputText] = useState('Hello World');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  const categories = ['All', ...Array.from(new Set(CLIPARTS.map(c => c.category)))];
+  const filteredCliparts = selectedCategory === 'All' 
+    ? CLIPARTS 
+    : CLIPARTS.filter(c => c.category === selectedCategory);
 
   const selectedLayer = layers.find(l => l.id === selectedId);
 
@@ -182,13 +188,34 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
                 <div>
                     <h3 className="font-semibold text-gray-800 mb-2">Clipart Library</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                        {CLIPARTS.map(clip => (
-                            <button key={clip.id} onClick={() => addClipart(clip.url)} className="border p-2 rounded hover:border-blue-500 bg-white">
-                                <img src={clip.url} alt={clip.category} className="w-full h-auto object-contain" />
+                    
+                    {/* Category Selector */}
+                    <div className="flex gap-2 overflow-x-auto pb-2 mb-3 no-scrollbar">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={`px-3 py-1 rounded-full text-xs whitespace-nowrap transition-colors ${
+                                    selectedCategory === cat 
+                                    ? 'bg-blue-600 text-white' 
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                            >
+                                {cat}
                             </button>
                         ))}
                     </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                        {filteredCliparts.map(clip => (
+                            <button key={clip.id} onClick={() => addClipart(clip.url)} className="border p-2 rounded hover:border-blue-500 bg-white transition-all hover:shadow-sm group">
+                                <img src={clip.url} alt={clip.category} className="w-full h-16 object-contain group-hover:scale-110 transition-transform" />
+                            </button>
+                        ))}
+                    </div>
+                    {filteredCliparts.length === 0 && (
+                        <p className="text-center text-gray-400 text-sm py-4">No cliparts found in this category.</p>
+                    )}
                 </div>
             </div>
         )}

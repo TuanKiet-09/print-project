@@ -63,9 +63,17 @@ export const MOCK_PRODUCTS: BaseProduct[] = [
 
 export const CLIPARTS = [
   { id: 'c1', url: 'https://cdn-icons-png.flaticon.com/512/2904/2904838.png', category: 'Emoji' },
+  { id: 'c1b', url: 'https://cdn-icons-png.flaticon.com/512/2904/2904845.png', category: 'Emoji' },
+  { id: 'c1c', url: 'https://cdn-icons-png.flaticon.com/512/2904/2904852.png', category: 'Emoji' },
   { id: 'c2', url: 'https://cdn-icons-png.flaticon.com/512/826/826955.png', category: 'Nature' },
+  { id: 'c2b', url: 'https://cdn-icons-png.flaticon.com/512/826/826963.png', category: 'Nature' },
+  { id: 'c2c', url: 'https://cdn-icons-png.flaticon.com/512/826/826970.png', category: 'Nature' },
   { id: 'c3', url: 'https://cdn-icons-png.flaticon.com/512/190/190666.png', category: 'Space' },
+  { id: 'c3b', url: 'https://cdn-icons-png.flaticon.com/512/190/190672.png', category: 'Space' },
+  { id: 'c3c', url: 'https://cdn-icons-png.flaticon.com/512/190/190678.png', category: 'Space' },
   { id: 'c4', url: 'https://cdn-icons-png.flaticon.com/512/869/869869.png', category: 'Animals' },
+  { id: 'c4b', url: 'https://cdn-icons-png.flaticon.com/512/869/869875.png', category: 'Animals' },
+  { id: 'c4c', url: 'https://cdn-icons-png.flaticon.com/512/869/869881.png', category: 'Animals' },
 ];
 
 export const MOCK_ORDERS = [

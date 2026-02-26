@@ -30,6 +30,15 @@
         }
       }
     </script>
+    <style>
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
   <script type="importmap">
 {
   "imports": {
@@ -41,6 +50,7 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-slate-50 text-slate-900 antialiased">
     <div id="root"></div>
