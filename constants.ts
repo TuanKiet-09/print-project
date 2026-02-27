@@ -62,6 +62,18 @@ export const MOCK_PRODUCTS: BaseProduct[] = [
 ];
 
 export const CLIPARTS = [
+  { id: '001', url: 'https://i.postimg.cc/fTq6X0rX/horse1.png', category: 'Year of the Horse' },
+  { id: '002', url: 'https://i.postimg.cc/WbYQrJHq/horse2.png', category: 'Year of the Horse' },
+  { id: '003', url: 'https://i.postimg.cc/ZKs13yMT/horse4.png', category: 'Year of the Horse' },
+  { id: '004', url: 'https://i.postimg.cc/YqDJgms2/horse_18141951.png', category: 'Year of the Horse' },
+  { id: '005', url: 'https://i.postimg.cc/wT4SJsGB/horse_18141958.png', category: 'Year of the Horse' },
+  { id: '006', url: 'https://i.postimg.cc/8PXqWr0s/horse_18142018.png', category: 'Year of the Horse' },
+  { id: '007', url: 'https://i.postimg.cc/9FgvTqnM/horse_18142869.png', category: 'Year of the Horse' },
+  { id: '008', url: 'https://i.postimg.cc/zX29WRcq/horse_5873011.png', category: 'Year of the Horse' },
+  { id: '009', url: 'https://i.postimg.cc/bNVKb2Bs/horse_6907497.png', category: 'Year of the Horse' },
+  { id: '010', url: 'https://cdn-icons-png.flaticon.com/512/869/869869.png', category: 'Year of the Horse' },
+  { id: '011', url: 'https://cdn-icons-png.flaticon.com/512/869/869875.png', category: 'Year of the Horse' },
+  { id: '012', url: 'https://cdn-icons-png.flaticon.com/512/869/869881.png', category: 'Year of the Horse' },
   { id: 'c1', url: 'https://cdn-icons-png.flaticon.com/512/2904/2904838.png', category: 'Emoji' },
   { id: 'c1b', url: 'https://cdn-icons-png.flaticon.com/512/2904/2904845.png', category: 'Emoji' },
   { id: 'c1c', url: 'https://cdn-icons-png.flaticon.com/512/2904/2904852.png', category: 'Emoji' },

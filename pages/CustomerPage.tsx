@@ -180,10 +180,10 @@ const CustomerPage: React.FC = () => {
                 <Save size={18} /> Save Preview
              </button>
              <button 
-                onClick={() => window.open('https://www.facebook.com/', '_blank', 'noopener,noreferrer')} 
+                onClick={() => window.open('https://www.facebook.com/profile.php?id=61587083019760&locale=vi_VN', '_blank', 'noopener,noreferrer')} 
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-sm"
                 >
-                Facebook Fanpage
+                Facebook
              </button>
         </div>
       </header>
