@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DesignCanvas from '../components/DesignCanvas';
 import Toolbar from '../components/Toolbar';
 import { MOCK_PRODUCTS, CANVAS_SIZE } from '../constants';
 import { DesignState, DesignLayer, BaseProduct, ProductVariant } from '../types';
-import { ShoppingCart, Save, X } from 'lucide-react';
+import { ShoppingCart, Save, X, HelpCircle } from 'lucide-react';
+import TutorialModal from './TutorialModal';
 
 const CustomerPage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<BaseProduct>(MOCK_PRODUCTS[0]);
@@ -144,6 +145,19 @@ const CustomerPage: React.FC = () => {
           }
       }, 100);
   };
+    const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+    useEffect(() => {
+    // Kiểm tra xem khách hàng đã từng xem hướng dẫn chưa
+        const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
+    
+    // Nếu chưa xem (lần đầu vào web), thì tự động mở Modal
+        if (!hasSeenTutorial) {
+        setIsTutorialOpen(true);
+      // Lưu lại vào trình duyệt để lần sau F5 không bị hiện lên nữa
+        localStorage.setItem('hasSeenTutorial', 'true');
+        }
+    }, []);
 
   return (
     <div className="flex flex-col h-screen bg-slate-50">
@@ -167,11 +181,17 @@ const CustomerPage: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-3">
+                 <button 
+             onClick={() => setIsTutorialOpen(true)} 
+             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg shadow-sm ml-auto"
+             >
+             <HelpCircle size={18} /> Hướng dẫn
+             </button>
              <button 
                 onClick={() => setShowSizeChart(true)}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm"
                  >
-                View Size Chart
+                Size Chart
              </button>
              <button onClick={handleSwitchSide} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
                 Side: {designState.side.toUpperCase()}
@@ -183,7 +203,7 @@ const CustomerPage: React.FC = () => {
                 onClick={() => window.open('https://www.messenger.com/t/61587083019760', '_blank', 'noopener,noreferrer')} 
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-sm"
                 >
-                Liên Hệ ngay với chúng tôi trên Facebook
+                Liên Hệ ngay trên Facebook
              </button>
         </div>
       </header>
@@ -302,6 +322,10 @@ const CustomerPage: React.FC = () => {
             </div>
         </div>
       )}
+      <TutorialModal 
+        isOpen={isTutorialOpen} 
+        onClose={() => setIsTutorialOpen(false)} 
+      />
     </div>
   );
 };
